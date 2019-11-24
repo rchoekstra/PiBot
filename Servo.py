@@ -27,10 +27,14 @@ class Servo:
 
     
     def calibrate(self, start=2.5, end=12.5):
+        """Sets the servo duty cycle range
+        """
         self._start = start
         self._end = end
 
     def set(self, x):
+        """Sets the servo position with a valye between -1 (left) and 1 (right)
+        """
         self.duty_cycle = map_range(x,-1,1,self._start, self._end)
 
     @property
@@ -39,6 +43,8 @@ class Servo:
 
     @duty_cycle.setter
     def duty_cycle(self, duty_cycle):
+        """Sets the duty cycle of the servo
+        """
         self._duty_cycle = duty_cycle
         self.pwm.ChangeDutyCycle(duty_cycle)
         
