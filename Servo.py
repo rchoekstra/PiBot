@@ -13,6 +13,7 @@ class Servo:
         # Store signal_pin and pwm_frequency (bypass setter)
         self._signal_pin = signal_pin
         self._pwm_frequency = pwm_frequency
+        self._duty_cycle = 0
 
         # Set signal pin to output mode
         GPIO.setup(self._signal_pin, GPIO.OUT)
@@ -27,15 +28,17 @@ class Servo:
 
     
     def calibrate(self, start=2.5, end=12.5):
-        """Sets the servo duty cycle range
-        """
+        """Sets the servo duty cycle range"""
         self._start = start
         self._end = end
 
     def set(self, x):
-        """Sets the servo position with a valye between -1 (left) and 1 (right)
-        """
+        """Sets the servo position with a valye between -1 (left) and 1 (right)"""
         self.duty_cycle = map_range(x,-1,1,self._start, self._end)
+
+    def get_normalized_position(self, min=-1, max=1):
+        """Return the normalized position of the serve based on the dut4y cycle"""
+        return map_range(self.duty_cycle,self._start, self._end, -1, 1)
 
     @property
     def duty_cycle(self):
@@ -43,13 +46,11 @@ class Servo:
 
     @duty_cycle.setter
     def duty_cycle(self, duty_cycle):
-        """Sets the duty cycle of the servo
-        """
+        """Sets the duty cycle of the servo"""
         self._duty_cycle = duty_cycle
         self.pwm.ChangeDutyCycle(duty_cycle)
         
 
-        
 if __name__ == '__main__':
     GPIO.setmode(GPIO.BCM)
     s = Servo(4,50)
@@ -59,6 +60,7 @@ if __name__ == '__main__':
             x = float(input("Set position (-1 - 1): "))
             s.set(x)
             print(f" - Duty cycle: {s.duty_cycle}")
+            print(f" - Normalized position: {s.get_normalized_position()}")
     except KeyboardInterrupt:
         s.pwm.stop()
         GPIO.cleanup
