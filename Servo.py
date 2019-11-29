@@ -34,7 +34,7 @@ class Servo:
 
     def set(self, x):
         """Sets the servo position with a valye between -1 (left) and 1 (right)"""
-        self.duty_cycle = map_range(x,-1,1,self._start, self._end)
+        self.duty_cycle = map_range(clamp(x,-1,1),-1,1,self._start, self._end)
 
     def get_normalized_position(self, min=-1, max=1):
         """Return the normalized position of the serve based on the dut4y cycle"""
