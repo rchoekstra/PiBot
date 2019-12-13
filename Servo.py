@@ -10,7 +10,7 @@ class Servo:
     # 90 degress: 1.5ms (12.5%)
 
     def __init__(self, signal_pin, pwm_frequency=50):
-        # Store signal_pin and pwm_frequency (bypass setter)
+        # Store signal_pin and pwm_frequency
         self._signal_pin = signal_pin
         self._pwm_frequency = pwm_frequency
         self._duty_cycle = 0
@@ -18,7 +18,7 @@ class Servo:
         # Set signal pin to output mode
         GPIO.setup(self._signal_pin, GPIO.OUT)
 
-        # Set signal pint to PWM with 
+        # Set signal pin to PWM width
         self.pwm = GPIO.PWM(self._signal_pin,self._pwm_frequency) # Set PWM frequency to 50Hz / 3000 cycles per minute
         self.pwm.start(0)
 
@@ -52,8 +52,11 @@ class Servo:
         
 
 if __name__ == '__main__':
+    signal_pin = int(input("Signal pin number (BCM): "))
+
     GPIO.setmode(GPIO.BCM)
-    s = Servo(4,50)
+    GPIO.setwarnings(False)
+    s = Servo(signal_pin,50)
 
     try:
         while True:
